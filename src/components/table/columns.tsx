@@ -12,7 +12,7 @@ export type Payment = {
   amount: number;
 };
 
-export const tableColumns = ( 
+export const tableColumns = (
   handleEdit: (id: string) => void,
   handleDelete: (id: string) => void,
 ) => {
