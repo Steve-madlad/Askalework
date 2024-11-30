@@ -27,7 +27,8 @@ export default function HomePage() {
     const store = localStorage.getItem("sheetData");
     if (store && typeof store === "string") {
       try {
-        const storedData: Payment[] = JSON.parse(store);
+        // Use a type assertion to specify that storedData is an array of Payment
+        const storedData = JSON.parse(store) as Payment[];
         if (Array.isArray(storedData)) {
           setData(storedData);
         }
@@ -54,21 +55,21 @@ export default function HomePage() {
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-
-    const target = e.currentTarget; // Use e.currentTarget for better type inference
-    const emailValue = target.email.value as string; // Explicitly cast to string
-    const amountValue = parseFloat(target.amount.value); // This should be fine as is
-
+  
+    const target = e.currentTarget as HTMLFormElement; // Assert target as HTMLFormElement
+    const emailValue = (target.elements.namedItem("email") as HTMLInputElement).value; // Access email input safely
+    const amountValue = parseFloat((target.elements.namedItem("amount") as HTMLInputElement).value); // Access amount input safely
+  
     const data: Payment = {
       id: uuidv4(),
       email: emailValue,
       amount: amountValue,
     };
-
+  
     console.log(data);
-
+  
     setData((prev) => [...prev, data]);
-
+  
     target.reset(); // No need to return here
   };
 
@@ -105,12 +106,12 @@ export default function HomePage() {
         </Card>
 
         <div className="datatable">
-          {exportable.length && (
+          {exportable.length ? (
             <Button className="mb-2 border-[1px] border-transparent duration-300 hover:border-[1px] hover:border-black hover:bg-white hover:text-black hover:shadow-md">
               <MdOutlineFileDownload />
               <CsvExporter exportable={exportable}></CsvExporter>
             </Button>
-          )}
+          ) : null}
           <DataTable columns={columns} data={data} />
         </div>
       </div>
