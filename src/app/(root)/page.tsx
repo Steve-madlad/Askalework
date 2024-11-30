@@ -13,14 +13,51 @@ import {
 } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import { useState } from "react";
-import { v4 as uuidv4 } from 'uuid';
+import { useEffect, useState } from "react";
+import { v4 as uuidv4 } from "uuid";
+import { CSVLink, CSVDownload } from "react-csv";
+import { MdOutlineFileDownload } from "react-icons/md";
+
+export type Exportable = {
+  id: string,
+  email: string,
+  amount: string,
+}
 
 export default function HomePage() {
-  const [data, setData] = useState<Payment[]>([]);
+  const storedData = localStorage.getItem("sheetData");
+  const [data, setData] = useState<Payment[]>(JSON.parse(storedData || "[]"));
 
-  console.log("stored", data);
-  
+  const [exportable, setExportable] = useState<Exportable[]>([]);
+
+  useEffect(() => {
+    if (data.length) {
+      localStorage.setItem("sheetData", JSON.stringify(data));
+      const modifiedData = data.map((row) => {
+        return {
+          id: row.id,
+          amount: String(row.amount),
+          email: row.email,
+        };
+      });
+
+      setExportable(modifiedData)
+    }
+  }, [data]);
+
+  const csvData = [
+    ["firstname", "lastname", "email"],
+    ["Ahmed", "Tomi", "ah@smthing.co.com"],
+    ["Raed", "Labes", "rl@smthing.co.com"],
+    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
+  ];
+  {
+    /* <CSVLink data={csvData}>Download me</CSVLink>; */
+  }
+  // or
+  {
+    /* <CSVDownload data={csvData} target="_blank" />; */
+  }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -68,6 +105,10 @@ export default function HomePage() {
         </Card>
 
         <div className="datatable">
+          <Button className="mb-2 border-[1px] border-transparent duration-300 hover:border-[1px] hover:border-black hover:bg-white hover:text-black hover:shadow-md">
+            <MdOutlineFileDownload />
+            <CSVLink data={exportable}>Export CSV</CSVLink>
+          </Button>
           <DataTable columns={columns} data={data} />
         </div>
       </div>
