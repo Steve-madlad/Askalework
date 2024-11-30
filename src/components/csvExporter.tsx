@@ -1,13 +1,10 @@
 import { CSVLink } from "react-csv";
+import { Exportable } from "@/app/(root)/page";
 
-export type Exportable = {
-  id: string,
-  email: string,
-  amount: string,
-}
-
-export default function CsvExporter({ exportable }: { exportable: Exportable[] }) {
-  return (
-    <CSVLink data={exportable}>Export CSV</CSVLink>
-  )
+export default function CsvExporter({
+  exportable,
+}: {
+  exportable: Exportable[];
+}) {
+  return <CSVLink data={exportable}>Export CSV</CSVLink>;
 }
