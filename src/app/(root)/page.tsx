@@ -25,8 +25,9 @@ export type Exportable = {
 }
 
 export default function HomePage() {
-  const storedData = localStorage.getItem("sheetData");
-  const [data, setData] = useState<Payment[]>(JSON.parse(storedData ?? "[]") || []);
+  const store = localStorage.getItem("sheetData");
+  const storedData = store ? JSON.parse(store) : [];
+  const [data, setData] = useState<Payment[]>(storedData);
 
   const [exportable, setExportable] = useState<Exportable[]>([]);
 
@@ -44,13 +45,6 @@ export default function HomePage() {
       setExportable(modifiedData)
     }
   }, [data]);
-
-  const csvData = [
-    ["firstname", "lastname", "email"],
-    ["Ahmed", "Tomi", "ah@smthing.co.com"],
-    ["Raed", "Labes", "rl@smthing.co.com"],
-    ["Yezzi", "Min l3b", "ymin@cocococo.com"],
-  ];
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
