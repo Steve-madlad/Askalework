@@ -3,26 +3,20 @@
 import { Payment, columns } from "@/components/table/columns";
 import { DataTable } from "@/components/table/data-table";
 import { Button } from "@/components/ui/button";
-import {
-  Card,
-  CardContent,
-  CardDescription,
-  CardFooter,
-  CardHeader,
-  CardTitle,
-} from "@/components/ui/card";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useEffect, useState } from "react";
 import { v4 as uuidv4 } from "uuid";
-import { CSVLink, CSVDownload } from "react-csv";
+import CsvExporter from "@/components/csvExporter";
 import { MdOutlineFileDownload } from "react-icons/md";
+import { CSVLink } from "react-csv";
 
 export type Exportable = {
-  id: string,
-  email: string,
-  amount: string,
-}
+  id: string;
+  email: string;
+  amount: string;
+};
 
 export default function HomePage() {
   const [data, setData] = useState<Payment[]>([]);
@@ -30,14 +24,19 @@ export default function HomePage() {
   const [exportable, setExportable] = useState<Exportable[]>([]);
 
   useEffect(() => {
-    const store = localStorage.getItem("sheetData")
-    if(store && typeof store === "string" ) {
-      const storedData = JSON.parse(store);
-      if(typeof storedData === "object")
-        setData(storedData);
+    const store = localStorage.getItem("sheetData");
+    if (store && typeof store === "string") {
+      try {
+        const storedData: Payment[] = JSON.parse(store);
+        if (Array.isArray(storedData)) {
+          setData(storedData);
+        }
+      } catch (error) {
+        console.error("Failed to parse stored data:", error);
+      }
     }
-  }, [])
-  
+  }, []);
+
   useEffect(() => {
     if (data.length) {
       localStorage.setItem("sheetData", JSON.stringify(data));
@@ -49,22 +48,28 @@ export default function HomePage() {
         };
       });
 
-      setExportable(modifiedData)
+      setExportable(modifiedData);
     }
   }, [data]);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
-    const target = e.target as HTMLFormElement;
-    const emailValue = target.email.value || "";
-    const amountValue = target.amount.value || "";
+    const target = e.currentTarget; // Use e.currentTarget for better type inference
+    const emailValue = target.email.value as string; // Explicitly cast to string
+    const amountValue = parseFloat(target.amount.value); // This should be fine as is
 
-    const data = { id: uuidv4(), email: emailValue, amount: amountValue };
+    const data: Payment = {
+      id: uuidv4(),
+      email: emailValue,
+      amount: amountValue,
+    };
+
+    console.log(data);
 
     setData((prev) => [...prev, data]);
 
-    return target.reset();
+    target.reset(); // No need to return here
   };
 
   return (
@@ -88,6 +93,7 @@ export default function HomePage() {
                   min={0}
                   id="amount"
                   placeholder="Amount"
+                  step={"any"}
                   required
                 />
               </div>
@@ -99,10 +105,12 @@ export default function HomePage() {
         </Card>
 
         <div className="datatable">
-          <Button className="mb-2 border-[1px] border-transparent duration-300 hover:border-[1px] hover:border-black hover:bg-white hover:text-black hover:shadow-md">
-            <MdOutlineFileDownload />
-            <CSVLink data={exportable}>Export CSV</CSVLink>
-          </Button>
+          {exportable.length && (
+            <Button className="mb-2 border-[1px] border-transparent duration-300 hover:border-[1px] hover:border-black hover:bg-white hover:text-black hover:shadow-md">
+              <MdOutlineFileDownload />
+              <CsvExporter exportable={exportable}></CsvExporter>
+            </Button>
+          )}
           <DataTable columns={columns} data={data} />
         </div>
       </div>
