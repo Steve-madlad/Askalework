@@ -51,20 +51,13 @@ export default function HomePage() {
     ["Raed", "Labes", "rl@smthing.co.com"],
     ["Yezzi", "Min l3b", "ymin@cocococo.com"],
   ];
-  {
-    /* <CSVLink data={csvData}>Download me</CSVLink>; */
-  }
-  // or
-  {
-    /* <CSVDownload data={csvData} target="_blank" />; */
-  }
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
 
     const target = e.target as HTMLFormElement;
-    const emailValue = target.email.value;
-    const amountValue = target.amount.value;
+    const emailValue = target.email.value || "";
+    const amountValue = target.amount.value || "";
 
     const data = { id: uuidv4(), email: emailValue, amount: amountValue };
 
