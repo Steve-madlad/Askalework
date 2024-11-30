@@ -26,7 +26,7 @@ export type Exportable = {
 
 export default function HomePage() {
   const storedData = localStorage.getItem("sheetData");
-  const [data, setData] = useState<Payment[]>(JSON.parse(storedData ?? "[]"));
+  const [data, setData] = useState<Payment[]>(JSON.parse(storedData ?? "[]") || []);
 
   const [exportable, setExportable] = useState<Exportable[]>([]);
 
