@@ -25,12 +25,19 @@ export type Exportable = {
 }
 
 export default function HomePage() {
-  const store = localStorage.getItem("sheetData");
-  const storedData = store ? JSON.parse(store) : [];
-  const [data, setData] = useState<Payment[]>(storedData);
+  const [data, setData] = useState<Payment[]>([]);
 
   const [exportable, setExportable] = useState<Exportable[]>([]);
 
+  useEffect(() => {
+    const store = localStorage.getItem("sheetData")
+    if(store && typeof store === "string" ) {
+      const storedData = JSON.parse(store);
+      if(typeof storedData === "object")
+        setData(storedData);
+    }
+  }, [])
+  
   useEffect(() => {
     if (data.length) {
       localStorage.setItem("sheetData", JSON.stringify(data));
