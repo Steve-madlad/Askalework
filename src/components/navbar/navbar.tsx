@@ -8,7 +8,7 @@ import { SiNextdotjs } from "react-icons/si";
 
 export default function Navbar() {
   return (
-    <nav className="flex justify-between border-b-[1px] pr-2">
+    <nav className="fixed top-0 flex w-full justify-between border border-b-[1px] border-white/20 bg-white/30 pr-2 shadow-lg backdrop-blur-md">
       <div className="logo my-2 flex min-h-10 items-center gap-2 border-zinc-400 pl-2 text-xl font-semibold">
         <img
           width={50}

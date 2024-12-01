@@ -6,5 +6,5 @@ export default function CsvExporter({
 }: {
   exportable: Exportable[];
 }) {
-  return <CSVLink data={exportable}>Export CSV</CSVLink>;
+  return <CSVLink data={exportable} filename="CivilService-data.csv">Export CSV</CSVLink>;
 }

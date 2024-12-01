@@ -11,7 +11,7 @@ import { v4 as uuidv4 } from "uuid";
 import CsvExporter from "@/components/csvExporter";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { toast } from "sonner";
-import { DeleteDialog } from "@/components/deleteDialog";
+import { DeleteDialog } from "@/components/modals/deleteDialog";
 
 export type Exportable = {
   fullname: string;
@@ -85,27 +85,29 @@ export default function HomePage() {
   };
 
   const handleEdit = (id: string ) => {
-    console.log("editing in function", id);
+    // console.log("editing in function", id);
     
-    const records = [...data];
-    const index = records.findIndex((record) => record.id === id);
+    // const records = [...data];
+    // const index = records.findIndex((record) => record.id === id);
 
-    records[index] = { id: "123", amount: 299, fullname: "snoop" };
-    console.log(records);
+    // records[index] = { id: "123", amount: 299, fullname: "snoop" };
+    // console.log(records);
     
-    setData(records);
+    // setData(records);
+    toast("This feature is not complete yet");
   };
 
   const handleDelete = (id: string) => {
-    const records = [...data];
-    const index = records.findIndex((record) => record.id === id);
+    // const records = [...data];
+    // const index = records.findIndex((record) => record.id === id);
 
-    records[index] = { id: "123", amount: 299, fullname: "snoop" };
-    setData(records);
+    // records[index] = { id: "123", amount: 299, fullname: "snoop" };
+    // setData(records);
+    toast("This feature is not complete yet")
   };
 
   return (
-    <main className="min-h-[calc(100vh-63px)] p-4">
+    <main className="min-h-[calc(100vh-63px)] pt-[70px] p-4">
       <div className="container mx-auto py-10">
         <Card className="mb-6 w-full sm:w-[450px]">
           <CardHeader>
