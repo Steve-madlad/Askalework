@@ -5,9 +5,8 @@ import { FiEdit2 } from "react-icons/fi";
 import { MdOutlineDelete } from "react-icons/md";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 
-
 import { Button } from "@/components/ui/button";
-import DialogDemo from "../modals/editDialog";
+import DialogDemo from "../modals/updateDialog";
 
 export type Payment = {
   id: string;
@@ -15,7 +14,10 @@ export type Payment = {
   amount: number;
 };
 
-export const tableColumns = (handleEdit: (id: string, modifiedData: Payment) => void, handleDelete: (id: string) => void) => {
+export const tableColumns = (
+  handleEdit: (id: string, modifiedData: Payment) => void,
+  handleDelete: (id: string) => void,
+) => {
   const editButton = () => {
     return (
       <Button className="mr-2">
@@ -36,8 +38,11 @@ export const tableColumns = (handleEdit: (id: string, modifiedData: Payment) => 
     {
       accessorKey: "fullname",
       header: () => (
-        <div className="text-base font-bold text-gray-100">Full Name</div>
+        <div className="text-base font-bold text-gray-100 pl-4">Full Name</div>
       ),
+      cell: ({row}) => (
+        <p className="pl-4">{row.original.fullname}</p>
+      ) 
     },
     {
       accessorKey: "amount",
@@ -71,9 +76,21 @@ export const tableColumns = (handleEdit: (id: string, modifiedData: Payment) => 
         const rowData = row.original;
 
         return (
-          <div className="pr-3 text-right">
-            <DialogDemo type="edit" row={rowData} trigger={editButton()} handleEdit={handleEdit} handleDelete={handleDelete}/>
-            <DialogDemo type="delete" row={rowData} trigger={deleteButton()} handleEdit={handleEdit} handleDelete={handleDelete}/>
+          <div className="text-right">
+            <DialogDemo
+              type="edit"
+              row={rowData}
+              trigger={editButton()}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
+            <DialogDemo
+              type="delete"
+              row={rowData}
+              trigger={deleteButton()}
+              handleEdit={handleEdit}
+              handleDelete={handleDelete}
+            />
           </div>
         );
       },

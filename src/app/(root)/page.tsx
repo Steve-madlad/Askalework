@@ -12,7 +12,7 @@ import CsvExporter from "@/components/csvExporter";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { toast } from "sonner";
 import DeleteDialog from "@/components/modals/deleteDialog";
-import DialogDemo from "@/components/modals/editDialog";
+import DialogDemo from "@/components/modals/updateDialog";
 import { DialogHeader } from "@/components/ui/dialog";
 
 export type Exportable = {
@@ -67,7 +67,7 @@ export default function HomePage() {
     const target = e.currentTarget as HTMLFormElement;
     const fullnameValue = (
       target.elements.namedItem("fullname") as HTMLInputElement
-    ).value;
+    ).value.trim();
     const amountValue = parseFloat(
       (target.elements.namedItem("amount") as HTMLInputElement).value,
     );

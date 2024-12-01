@@ -22,24 +22,21 @@ type DialogProps = {
   handleDelete: (id: string) => void;
 };
 
-export default function DialogDemo({
+export default function updateDialog({
   type,
   trigger,
   row,
   handleEdit,
   handleDelete,
 }: DialogProps) {
-  console.log("row in dialog", row);
 
   const handleSubmit = (e: React.FormEvent<HTMLFormElement>) => {
-    console.log("submitting here");
-
     e.preventDefault();
 
     const target = e.currentTarget as HTMLFormElement;
     const fullnameValue = (
       target.elements.namedItem("fullname") as HTMLInputElement
-    ).value;
+    ).value.trim();
     const amountValue = parseFloat(
       (target.elements.namedItem("amount") as HTMLInputElement).value,
     );
@@ -80,6 +77,7 @@ export default function DialogDemo({
               defaultValue={row.fullname || ""}
               className="col-span-3"
               disabled={type === "delete"}
+              required
             />
           </div>
           <div className="grid grid-cols-4 items-center gap-4">
@@ -92,6 +90,7 @@ export default function DialogDemo({
               className="col-span-3"
               type="number"
               disabled={type === "delete"}
+              required
             />
           </div>
           <DialogFooter>
