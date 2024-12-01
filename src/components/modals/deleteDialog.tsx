@@ -11,7 +11,7 @@ import {
 } from "@/components/ui/alert-dialog";
 import { MdOutlineDeleteOutline } from "react-icons/md";
 
-export function DeleteDialog({callback} : { callback: () => void }) {
+export default function DeleteDialog({callback} : { callback: () => void }) {
   return (
     <AlertDialog>
       <AlertDialogTrigger asChild>

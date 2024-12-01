@@ -3,9 +3,11 @@
 import { ColumnDef } from "@tanstack/react-table";
 import { FiEdit2 } from "react-icons/fi";
 import { MdOutlineDelete } from "react-icons/md";
+import { MdOutlineDeleteOutline } from "react-icons/md";
+
 
 import { Button } from "@/components/ui/button";
-import EditDialog from "../modals/editDialog";
+import DialogDemo from "../modals/editDialog";
 
 export type Payment = {
   id: string;
@@ -13,15 +15,20 @@ export type Payment = {
   amount: number;
 };
 
-export const tableColumns = (
-  handleEdit: (id: string) => void,
-  handleDelete: (id: string) => void,
-) => {
-  const editButton = (id: string) => {
+export const tableColumns = (handleEdit: (id: string, modifiedData: Payment) => void, handleDelete: (id: string) => void) => {
+  const editButton = () => {
     return (
-      <div className="mr-2" onClick={() => handleEdit(id)}>
+      <Button className="mr-2">
         <FiEdit2 />
-      </div>
+      </Button>
+    );
+  };
+
+  const deleteButton = () => {
+    return (
+      <Button className="mr-2" variant={"destructive"}>
+        <MdOutlineDeleteOutline />
+      </Button>
     );
   };
 
@@ -61,24 +68,12 @@ export const tableColumns = (
         </div>
       ),
       cell: ({ row }) => {
-        const id = row.original.id;
+        const rowData = row.original;
 
         return (
           <div className="pr-3 text-right">
-            <Button
-              className="mr-2"
-              size={"icon"}
-              onClick={() => handleEdit(id)}
-            >
-              <FiEdit2 />
-            </Button>
-            <Button
-              variant={"destructive"}
-              size={"icon"}
-              onClick={() => handleDelete(id)}
-            >
-              <MdOutlineDelete />
-            </Button>
+            <DialogDemo type="edit" row={rowData} trigger={editButton()} handleEdit={handleEdit} handleDelete={handleDelete}/>
+            <DialogDemo type="delete" row={rowData} trigger={deleteButton()} handleEdit={handleEdit} handleDelete={handleDelete}/>
           </div>
         );
       },

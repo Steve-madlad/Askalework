@@ -11,17 +11,22 @@ import { v4 as uuidv4 } from "uuid";
 import CsvExporter from "@/components/csvExporter";
 import { MdOutlineFileDownload } from "react-icons/md";
 import { toast } from "sonner";
-import { DeleteDialog } from "@/components/modals/deleteDialog";
+import DeleteDialog from "@/components/modals/deleteDialog";
+import DialogDemo from "@/components/modals/editDialog";
+import { DialogHeader } from "@/components/ui/dialog";
 
 export type Exportable = {
   fullname: string;
   amount: string;
 };
 
+type DialogTypes = "edit" | "delete" | null;
+
 export default function HomePage() {
   const [data, setData] = useState<Payment[]>([]);
-  console.log(data);
-  
+  const [dialogVisible, setDialogVisible] = useState<boolean>(false);
+  const [dialogType, setDialogType] = useState<DialogTypes>(null);
+
   const [exportable, setExportable] = useState<Exportable[]>([]);
 
   useEffect(() => {
@@ -40,7 +45,6 @@ export default function HomePage() {
 
   useEffect(() => {
     if (data.length) {
-      
       localStorage.setItem("sheetData", JSON.stringify(data));
 
       const modifiedData = data.map((row) => {
@@ -51,6 +55,9 @@ export default function HomePage() {
       });
 
       setExportable(modifiedData);
+    } else {
+      localStorage.clear();
+      setExportable([]);
     }
   }, [data]);
 
@@ -84,30 +91,31 @@ export default function HomePage() {
     toast("All records have been deleted.");
   };
 
-  const handleEdit = (id: string ) => {
-    // console.log("editing in function", id);
-    
-    // const records = [...data];
-    // const index = records.findIndex((record) => record.id === id);
+  const handleEdit = (id: string, modifiedData: Payment) => {
+    console.log("editing in function", id);
 
-    // records[index] = { id: "123", amount: 299, fullname: "snoop" };
-    // console.log(records);
-    
-    // setData(records);
-    toast("This feature is not complete yet");
+    const records = [...data];
+    const index = records.findIndex((record) => record.id === id);
+
+    records[index] = modifiedData;
+    console.log(records);
+
+    setData(records);
+    toast("Record has been updated");
+    setDialogType(null);
   };
 
   const handleDelete = (id: string) => {
-    // const records = [...data];
-    // const index = records.findIndex((record) => record.id === id);
-
-    // records[index] = { id: "123", amount: 299, fullname: "snoop" };
-    // setData(records);
-    toast("This feature is not complete yet")
+    const records = [...data];
+    const index = records.findIndex((record) => record.id === id);
+    records.splice(index, 1);
+    setData(records);
+    toast("Record has been deleted");
+    setDialogType(null);
   };
 
   return (
-    <main className="min-h-[calc(100vh-63px)] pt-[70px] p-4">
+    <main className="min-h-[calc(100vh-63px)] p-4 pt-[70px]">
       <div className="container mx-auto py-10">
         <Card className="mb-6 w-full sm:w-[450px]">
           <CardHeader>
